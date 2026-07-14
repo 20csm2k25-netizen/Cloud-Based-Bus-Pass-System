@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  rider
+  operator_admin
+  platform_admin
+}
+
+enum HoldStatus {
+  held
+  confirmed
+  expired
+  cancelled
+}
+
+enum BookingStatus {
+  pending
+  paid
+  cancelled
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  failed
+  refunded
+}
+
+enum TicketScanStatus {
+  valid
+  used
+  void
+}
+
+model User {
+  id            String      @id @default(cuid())
+  email         String      @unique
+  phone         String?     @unique
+  passwordHash  String      @map("password_hash")
+  role          UserRole     @default(rider)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  bookings      Booking[]
+  seatHolds     SeatHold[]
+
+  @@map("users")
+}
+
+model Operator {
+  id        String   @id @default(cuid())
+  name      String
+  contact   String?
+  status    String   @default("active")
+  buses     Bus[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("operators")
+}
+
+model Bus {
+  id           String   @id @default(cuid())
+  operatorId   String   @map("operator_id")
+  operator     Operator @relation(fields: [operatorId], references: [id])
+  seatMapJson  Json     @map("seat_map_json")
+  amenities    Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  trips        Trip[]
+
+  @@map("buses")
+}
+
+model Route {
+  id          String   @id @default(cuid())
+  origin      String
+  destination String
+  distanceKm  Int      @map("distance_km")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  trips       Trip[]
+
+  @@map("routes")
+}
+
+model Trip {
+  id          String   @id @default(cuid())
+  routeId     String   @map("route_id")
+  busId       String   @map("bus_id")
+  departureAt DateTime  @map("departure_at")
+  baseFare    Decimal   @db.Decimal(10, 2) @map("base_fare")
+  status      String    @default("scheduled")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  route       Route     @relation(fields: [routeId], references: [id])
+  bus         Bus       @relation(fields: [busId], references: [id])
+  seatHolds   SeatHold[]
+  bookings    Booking[]
+
+  @@map("trips")
+}
+
+model SeatHold {
+  id           String     @id @default(cuid())
+  tripId       String     @map("trip_id")
+  seatNumber   String     @map("seat_number")
+  status       HoldStatus @default(held)
+  userId       String     @map("user_id")
+  expiresAt    DateTime   @map("expires_at")
+  priceLocked  Decimal    @db.Decimal(10, 2) @map("price_locked")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  trip         Trip       @relation(fields: [tripId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+
+  @@index([tripId, seatNumber, status])
+  @@map("seat_holds")
+}
+
+model Booking {
+  id            String         @id @default(cuid())
+  userId        String         @map("user_id")
+  tripId        String         @map("trip_id")
+  totalAmount   Decimal        @db.Decimal(10, 2) @map("total_amount")
+  paymentStatus BookingStatus  @default(pending) @map("payment_status")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  user          User           @relation(fields: [userId], references: [id])
+  trip          Trip           @relation(fields: [tripId], references: [id])
+  tickets       Ticket[]
+  payments      Payment[]
+
+  @@map("bookings")
+}
+
+model Ticket {
+  id           String          @id @default(cuid())
+  bookingId    String          @map("booking_id")
+  seatNumber   String          @map("seat_number")
+  qrSignature  String          @map("qr_signature")
+  scanStatus   TicketScanStatus @default(valid) @map("scan_status")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+  booking      Booking         @relation(fields: [bookingId], references: [id])
+
+  @@map("tickets")
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  bookingId      String        @map("booking_id")
+  gatewayRef     String?       @map("gateway_ref")
+  amount         Decimal       @db.Decimal(10, 2)
+  status         PaymentStatus @default(pending)
+  idempotencyKey String        @unique @map("idempotency_key")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  booking        Booking       @relation(fields: [bookingId], references: [id])
+
+  @@map("payments")
+}

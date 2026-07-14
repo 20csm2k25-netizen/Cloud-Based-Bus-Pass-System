@@ -1,0 +1,25 @@
+{
+  "name": "@routewise/auth-service",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "echo \"auth-service tests not yet added\""
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "bcryptjs": "^2.4.3",
+    "fastify": "^4.28.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^22.7.4",
+    "prisma": "^5.18.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.5.4"
+  }
+}

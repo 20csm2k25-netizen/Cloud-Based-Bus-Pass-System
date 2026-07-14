@@ -1,0 +1,12 @@
+{
+  "name": "@routewise/catalog-service",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"catalog-service build stub\"",
+    "dev": "echo \"catalog-service dev stub\"",
+    "lint": "echo \"catalog-service lint stub\"",
+    "test": "echo \"catalog-service test stub\""
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@routewise/search-service",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"search-service build stub\"",
+    "dev": "echo \"search-service dev stub\"",
+    "lint": "echo \"search-service lint stub\"",
+    "test": "echo \"search-service test stub\""
+  }
+}

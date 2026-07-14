@@ -1,0 +1,12 @@
+{
+  "name": "@routewise/web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"web build stub\"",
+    "dev": "echo \"web dev stub\"",
+    "lint": "echo \"web lint stub\"",
+    "test": "echo \"web test stub\""
+  }
+}

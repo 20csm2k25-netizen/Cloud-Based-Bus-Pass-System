@@ -1,0 +1,12 @@
+{
+  "name": "@routewise/notification-service",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"notification-service build stub\"",
+    "dev": "echo \"notification-service dev stub\"",
+    "lint": "echo \"notification-service lint stub\"",
+    "test": "echo \"notification-service test stub\""
+  }
+}

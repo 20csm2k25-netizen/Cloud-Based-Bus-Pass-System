@@ -1,0 +1,12 @@
+{
+  "name": "@routewise/payment-service",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"payment-service build stub\"",
+    "dev": "echo \"payment-service dev stub\"",
+    "lint": "echo \"payment-service lint stub\"",
+    "test": "echo \"payment-service test stub\""
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@routewise/booking-service",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"booking-service build stub\"",
+    "dev": "echo \"booking-service dev stub\"",
+    "lint": "echo \"booking-service lint stub\"",
+    "test": "echo \"booking-service test stub\""
+  }
+}
